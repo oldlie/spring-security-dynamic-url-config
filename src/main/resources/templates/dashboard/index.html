@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link href="https://cdn.bootcss.com/element-ui/2.5.4/theme-chalk/index.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/vue/2.6.6/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/element-ui/2.5.4/index.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <script  type="text/javascript" th:src="@{/js/core.js}"></script>
+</head>
+<body>
+Dashboard.
+
+<div id="app">
+
+    {{message}}
+
+    <button @click="test">Test</button>
+</div>
+
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data:{
+            message: 'Test'
+        },
+        methods: {
+            test: function () {
+                var self = this;
+                axios.get('/dashboard/test')
+                    .then(function (value) {
+                        console.info(value);
+                        if (value['status'] === 200) {
+                            self.message = value['data']['message'];
+                            console.log('self.message->', self.message)
+                        }
+                    })
+                    .catch(function (reason) { console.error(reason) })
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

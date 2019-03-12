@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.bootcss.com/element-ui/2.5.4/theme-chalk/index.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/vue/2.6.6/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/element-ui/2.5.4/index.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <script  type="text/javascript" th:src="@{/js/core.js}"></script>
+</head>
+<body>
+
+<div id="app">
+    <div style="width: 600px; margin: 15px auto;">
+        <el-form :model="form" status-icon :rules="rule" ref="form" label-width="100px">
+            <el-form-item label="账户" prop="account">
+                <el-input v-model="form.account"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+                <el-input type="password" v-model="form.password" autocomplete="off" @keyup.enter="submitForm"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="submitForm">提交</el-button>
+                <el-button @click="resetForm">重置</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+
+</div>
+
+<input type="hidden" id="token" value="helloworld">
+
+<script type="text/javascript">
+
+    // axios.defaults.baseURL = ;
+    // axios.defaults.headers.common['Authorization'] = 'DynamicUrl ' + [[${token}]];
+    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+    var vm = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                message: 'hello',
+                form: {
+                    account: '',
+                    password: ''
+                },
+                rule: {
+                    account: [],
+                    password: []
+                }
+            }
+        },
+        methods: {
+            submitForm: function () {
+                var fd = new FormData();
+                fd.append('account', this.form.account);
+                fd.append('password', this.form.password);
+                axios.post('login', {
+                    'account': this.form.account,
+                    'password': this.form.password
+                }).then(function (value) {
+                    console.log(value);
+                    if (value['status'] === 200) {
+                        console.log('redirect to admin/index');
+                        window.location.href = '/dashboard/index';
+                    }
+                }).catch(function (reason) {
+                    console.error(reason)
+                });
+            },
+            resetForm: function (form) {
+                axios.get('/dashboard/test')
+                    .then(function (value) {
+                        console.info(value);
+                    })
+                    .catch(function (reason) { console.error(reason) })
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
